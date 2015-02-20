@@ -90,16 +90,13 @@ post '/player_hit' do
   #erb :player_hit
   session[:turn] = 'player'
   session[:player_cards] << session[:deck].pop
-
+  session[:calc_dealer_total] = false
   erb :game
 end
 
 post '/player_stay' do
   session[:turn] = 'dealer'
-  #session[:turn] = 'dealer'
-  #erb :player_hit
-  #session[:player_cards] << session[:deck].pop
-  # session[:card_visibility] = true
+  session[:calc_dealer_total] = true
   erb :game
 
 end
@@ -107,6 +104,7 @@ end
 post '/dealer_hit' do
 #	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
+
   erb :game
 end
 
@@ -119,10 +117,10 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] << session[:deck].pop
   session[:player_cards] << session[:deck].pop
-	session[:dealer_showing] = session[:deck].pop
+  session[:dealer_showing] = session[:deck].pop
   session[:dealer_cards] << session[:dealer_showing]
   session[:player_cards] << session[:deck].pop
-
+  session[:calc_dealer_total] = false
   erb :game
 
 end

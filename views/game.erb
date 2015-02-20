@@ -1,4 +1,4 @@
-<h1>Blackjack</h1>
+
 
 <% if session[:turn] == 'player' %>
   <% player_total = calculate_total(session[:player_cards]).to_i %>
@@ -17,16 +17,19 @@
 <% player_total = calculate_total(session[:dealer_cards]).to_i %>
 <p>
   <% if player_total == 21  %>
-  <div class="alert alert-success"> The dealer Hit 21 and Wins! </div>
+  <div class="alert alert-success"> The dealer Hit 21 and Wins! <a href="/">Would you like to play again?</a></div>
 
   <% elsif player_total > 21 %>
-  <div class="alert alert-error"> The dealer hit <%= player_total %> and Busted!</div>
-  <a href="/">Would you like to play again?</a>
+  <div class="alert alert-error"> The dealer hit <%= player_total %> and Busted!
+    <a href="/">Would you like to play again?</a>
+  </div>
   <% end %>
 </p>
 <% end %>
 
-<% dealer_total = calculate_total(session[:dealer_cards]).to_i %>
+<h1>Blackjack</h1>
+
+<%# dealer_total = calculate_total(session[:dealer_cards]).to_i %>
 
 <p>Welcome <%= session[:username] %>.</p>
 
@@ -46,8 +49,15 @@ What would you like to do?
 <% else %>
   <% card_up = session[:dealer_showing][1] %>
 <% end %>
+
+<% if session[:calc_dealer_total] %>
+  <% total = calculate_total(session[:dealer_cards]) %>
+<% end %>
+<% if !session[:calc_dealer_total] %>
+  <% total = card_up %>
+<% end %>
 <p>
-  The dealer has <%= card_up %> showing.
+  The dealer has <%= total %> showing.
 </p>
 
 
@@ -89,10 +99,11 @@ Player's cards:
 
 <% if player_total < 21 %>
 What would you like to do?
+<% end %>
 <p>
   <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing
 </p>
-<% end %>
+
 
 <ul class="thumbnails">
 
