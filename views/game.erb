@@ -37,13 +37,19 @@ Dealer's cards:
   <% end %>
 
 </ul>
-
-<% if dealer_total < 21 %>
 What would you like to do?
-<p>
-  The dealer has <%= calculate_total(session[:dealer_cards]) %>
-</p>
+
+<% if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King' %>
+  <% card_up = 10 %>
+<% elsif session[:dealer_showing][1] == 'Ace' %>
+  <% card_up = 11 %>
+<% else %>
+  <% card_up = session[:dealer_showing][1] %>
 <% end %>
+<p>
+  The dealer has <%= card_up %> showing.
+</p>
+
 
 <ul class="thumbnails">
 
@@ -62,14 +68,14 @@ What would you like to do?
   <% end %>
 </ul>
 
-<%= session[:turner] %>
-<%# if session[:turn] == 'dealer' %>
+
+<% if session[:turn] == 'dealer' %>
   <p>
     <form action="/dealer_hit" method="post">
       <input type="submit" value="Dealer Hit" class="btn">
     </form>
   </p>
-<%# end %>
+<% end %>
 <br/>
 
 
@@ -84,7 +90,7 @@ Player's cards:
 <% if player_total < 21 %>
 What would you like to do?
 <p>
-  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %>
+  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing
 </p>
 <% end %>
 

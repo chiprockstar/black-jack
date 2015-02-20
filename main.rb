@@ -119,7 +119,8 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] << session[:deck].pop
   session[:player_cards] << session[:deck].pop
-  session[:dealer_cards] << session[:deck].pop
+	session[:dealer_showing] = session[:deck].pop
+  session[:dealer_cards] << session[:dealer_showing]
   session[:player_cards] << session[:deck].pop
 
   erb :game
