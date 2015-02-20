@@ -6,9 +6,9 @@
     <% if player_total == 21  %>
       <div class="alert alert-success"> <%= session[:username] %> Hit 21 and Wins! </div>
 
-    <% elsif player_total > 21 %>
-      <div class="alert alert-error"> <%= session[:username] %> hit <%= player_total %> and Busted!</div>
-      <a href="/">Would you like to play again?</a>
+    <%# elsif player_total > 21 %>
+      <!-- <div class="alert alert-error"> <%#= session[:username] %> hit <%#= player_total %> and Busted!</div>
+      <a href="/">Would you like to play again?</a> -->
     <% end %>
   </p>
 <% end %>
@@ -19,29 +19,29 @@
   <% if player_total == 21  %>
   <div class="alert alert-success"> The dealer Hit 21 and Wins! <a href="/">Would you like to play again?</a></div>
 
-  <% elsif player_total > 21 %>
-  <div class="alert alert-error"> The dealer hit <%= player_total %> and Busted!
+  <%# elsif player_total > 21 %>
+  <!-- <div class="alert alert-error"> The dealer hit <%#= player_total %> and Busted!
     <a href="/">Would you like to play again?</a>
-  </div>
+  </div> -->
   <% end %>
 </p>
 <% end %>
 
-<h1>Blackjack</h1>
+<h1>Blackjack!</h1>
 
 <%# dealer_total = calculate_total(session[:dealer_cards]).to_i %>
 
 <p>Welcome <%= session[:username] %>.</p>
-
-Dealer's cards:
-<ul>
-  <% session[:dealer_cards].each do |card| %>
-    <li><%= card.to_s %></li>
-  <% end %>
+<div class="well">
+<h4>Dealer's cards:</h4>
+<!-- <ul>
+  <%# session[:dealer_cards].each do |card| %>
+    <li><%#= card.to_s %></li>
+  <%# end %>
 
 </ul>
 What would you like to do?
-
+-->
 <p>
   The dealer has <%= calculate_only_visible %> showing.
 </p>
@@ -63,7 +63,7 @@ What would you like to do?
   </li>
   <% end %>
 </ul>
-
+</div>
 
 <% if session[:turn] == 'dealer' %>
   <p>
@@ -74,25 +74,24 @@ What would you like to do?
 <% end %>
 <br/>
 
+<div class="well">
+<h4>Player's cards:</h4>
+<!-- <ul>
+  <%# session[:player_cards].each do |card| %>
+  <li><%#= card.to_s %></li>
+  <%# end %>
 
-Player's cards:
-<ul>
-  <% session[:player_cards].each do |card| %>
-  <li><%= card.to_s %></li>
-  <% end %>
-
-</ul>
+</ul> -->
 
 <% if player_total < 21 %>
 What would you like to do?
 <% end %>
 <p>
-  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing
+  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing.
 </p>
 
 
 <ul class="thumbnails">
-
     <% session[:player_cards].each do |card| %>
     <li class="span2">
       <div class="thumbnail">
@@ -101,6 +100,7 @@ What would you like to do?
     </li>
     <% end %>
 </ul>
+</div>
 
 <% if session[:turn] == 'player' %>
   <ul class="thumbnails">
@@ -111,7 +111,7 @@ What would you like to do?
     </li>
     <li class="span2">
       <form action="/player_stay" method="post">
-        <input type="submit" value="Player Stay" class="btn btn-danger">
+        <input type="submit" value="Player Stay" class="btn btn-warning">
       </form>
     </li>
   </ul>

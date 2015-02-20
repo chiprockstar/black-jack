@@ -55,13 +55,12 @@ helpers do
 			end
 
 			if session[:calc_dealer_total]
-				 total = calculate_total(session[:dealer_cards])
+				total = calculate_total(session[:dealer_cards])
 			end
 			if !session[:calc_dealer_total]
 				total = card_up
 			end
-			return total
-
+			total
 		end
 
 end
@@ -89,8 +88,12 @@ get '/get_user' do
 end
 
 post '/get_user' do
+	if params[:username].empty?
+		@error = "Name is required"
+		halt erb(:get_user)
+	end
   session[:username] = params[:username]
-  redirect '/game'
+  redirect '/'
 end
 
 post '/player_hit' do
@@ -98,6 +101,9 @@ post '/player_hit' do
   session[:turn] = 'player'
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
+	if calculate_total(session[:player_cards]) > 21
+		@error = "Sorry, it looks like #{session[:username]} busted."
+	end
   erb :game
 end
 
@@ -111,7 +117,9 @@ end
 post '/dealer_hit' do
 #	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
-
+	if calculate_total(session[:dealer_cards]) > 21
+		@error = "Sorry, it looks like the dealer busted."
+	end
   erb :game
 end
 
