@@ -1,0 +1,115 @@
+<h1>Blackjack</h1>
+
+<% if session[:turn] == 'player' %>
+  <% player_total = calculate_total(session[:player_cards]).to_i %>
+  <p>
+    <% if player_total == 21  %>
+      <div class="alert alert-success"> <%= session[:username] %> Hit 21 and Wins! </div>
+
+    <% elsif player_total > 21 %>
+      <div class="alert alert-error"> <%= session[:username] %> hit <%= player_total %> and Busted!</div>
+      <a href="/">Would you like to play again?</a>
+    <% end %>
+  </p>
+<% end %>
+
+<% if session[:turn] == 'dealer' %>
+<% player_total = calculate_total(session[:dealer_cards]).to_i %>
+<p>
+  <% if player_total == 21  %>
+  <div class="alert alert-success"> The dealer Hit 21 and Wins! </div>
+
+  <% elsif player_total > 21 %>
+  <div class="alert alert-error"> The dealer hit <%= player_total %> and Busted!</div>
+  <a href="/">Would you like to play again?</a>
+  <% end %>
+</p>
+<% end %>
+
+<% dealer_total = calculate_total(session[:dealer_cards]).to_i %>
+
+<p>Welcome <%= session[:username] %>.</p>
+
+Dealer's cards:
+<ul>
+  <% session[:dealer_cards].each do |card| %>
+    <li><%= card.to_s %></li>
+  <% end %>
+
+</ul>
+
+<% if dealer_total < 21 %>
+What would you like to do?
+<p>
+  The dealer has <%= calculate_total(session[:dealer_cards]) %>
+</p>
+<% end %>
+
+<ul class="thumbnails">
+
+  <% if session[:turn] == 'player' %>
+    <% visibility = false %>
+  <% else %>
+    <% visibility = true %>
+  <% end %>
+  <% session[:dealer_cards].each do |card| %>
+  <li class="span2">
+    <div class="thumbnail">
+      <img  src= <%= show_hand(card, visibility) %>
+      <% visibility = true %>
+    </div>
+  </li>
+  <% end %>
+</ul>
+
+<%= session[:turner] %>
+<%# if session[:turn] == 'dealer' %>
+  <p>
+    <form action="/dealer_hit" method="post">
+      <input type="submit" value="Dealer Hit" class="btn">
+    </form>
+  </p>
+<%# end %>
+<br/>
+
+
+Player's cards:
+<ul>
+  <% session[:player_cards].each do |card| %>
+  <li><%= card.to_s %></li>
+  <% end %>
+
+</ul>
+
+<% if player_total < 21 %>
+What would you like to do?
+<p>
+  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %>
+</p>
+<% end %>
+
+<ul class="thumbnails">
+
+    <% session[:player_cards].each do |card| %>
+    <li class="span2">
+      <div class="thumbnail">
+        <img  src= <%= show_hand(card, true) %>
+      </div>
+    </li>
+    <% end %>
+</ul>
+
+<% if session[:turn] == 'player' %>
+  <ul class="thumbnails">
+    <li class="span2">
+      <form action="/player_hit" method="post">
+        <input type="submit" value="Player Hit" class="btn btn-success">
+      </form>
+    </li>
+    <li class="span2">
+      <form action="/player_stay" method="post">
+        <input type="submit" value="Player Stay" class="btn btn-danger">
+      </form>
+    </li>
+  </ul>
+<% end %>
