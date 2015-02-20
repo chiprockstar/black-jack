@@ -42,22 +42,8 @@ Dealer's cards:
 </ul>
 What would you like to do?
 
-<% if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King' %>
-  <% card_up = 10 %>
-<% elsif session[:dealer_showing][1] == 'Ace' %>
-  <% card_up = 11 %>
-<% else %>
-  <% card_up = session[:dealer_showing][1] %>
-<% end %>
-
-<% if session[:calc_dealer_total] %>
-  <% total = calculate_total(session[:dealer_cards]) %>
-<% end %>
-<% if !session[:calc_dealer_total] %>
-  <% total = card_up %>
-<% end %>
 <p>
-  The dealer has <%= total %> showing.
+  The dealer has <%= calculate_only_visible %> showing.
 </p>
 
 

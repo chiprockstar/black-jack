@@ -27,35 +27,42 @@ helpers do
   def show_hand(card, visibility)
     image_path = 'images/cards/'
 
+    if visibility == false
+       return image_path + "cover.jpg"
+    end
 
-      if visibility == false
-         return image_path + "cover.jpg"
-      end
+    if card[0] == 'H'
+      return image_path + "hearts_" + card[1] + ".jpg"
 
-      if card[0] == 'H'
-        return image_path + "hearts_" + card[1] + ".jpg"
+    elsif card[0] == 'D'
+      return image_path + "diamonds_" + card[1] + ".jpg"
+    elsif card[0] == 'C'
+      return image_path + "clubs_" + card[1] + ".jpg"
+    elsif card[0] == 'S'
+      return image_path + "spades_" + card[1] + ".jpg"
+    else
 
+    end
+	end
 
-      elsif card[0] == 'D'
+		def calculate_only_visible
+			if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
+				card_up = 10
+			elsif session[:dealer_showing][1] == 'Ace'
+				card_up = 11
+			else
+				card_up = session[:dealer_showing][1]
+			end
 
-        return image_path + "diamonds_" + card[1] + ".jpg"
+			if session[:calc_dealer_total]
+				 total = calculate_total(session[:dealer_cards])
+			end
+			if !session[:calc_dealer_total]
+				total = card_up
+			end
+			return total
 
-
-      elsif card[0] == 'C'
-
-        return image_path + "clubs_" + card[1] + ".jpg"
-
-
-      elsif card[0] == 'S'
-
-        return image_path + "spades_" + card[1] + ".jpg"
-
-      else
-
-      end
-
-  end
-
+		end
 
 end
 
