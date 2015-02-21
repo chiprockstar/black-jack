@@ -1,19 +1,10 @@
 
 <h1>Blackjack!</h1>
 
-<%# dealer_total = calculate_total(session[:dealer_cards]).to_i %>
-
 <p>Welcome <%= session[:username] %>.</p>
 <div class="well">
 <h4>Dealer's cards:</h4>
-<!-- <ul>
-  <%# session[:dealer_cards].each do |card| %>
-    <li><%#= card.to_s %></li>
-  <%# end %>
 
-</ul>
-What would you like to do?
--->
 <p>
   The dealer has <%= calculate_only_visible %> showing.
 </p>
@@ -40,7 +31,7 @@ What would you like to do?
 <% if session[:turn] == 'dealer' %>
   <p>
     <form action="/dealer_hit" method="post">
-      <input type="submit" value="Dealer Hit" class="btn">
+      <input type="submit" value="Dealer Hit" class="btn btn-success">
     </form>
   </p>
 <% end %>
@@ -48,16 +39,9 @@ What would you like to do?
 
 <div class="well">
 <h4>Player's cards:</h4>
-<!-- <ul>
-  <%# session[:player_cards].each do |card| %>
-  <li><%#= card.to_s %></li>
-  <%# end %>
 
-</ul> -->
-
-<%# if player_total < 21 %>
 What would you like to do?
-<%# end %>
+
 <p>
   <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing.
 </p>

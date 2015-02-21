@@ -104,7 +104,7 @@ end
 
 post '/get_user' do
   if params[:username].empty?
-    @error = "Name is required"
+    @error = "Your name is required"
     halt erb(:get_user)
   end
   session[:username] = params[:username]
