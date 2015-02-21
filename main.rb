@@ -43,25 +43,25 @@ helpers do
     else
 
     end
-	end
+  end
 
-		def calculate_only_visible
-			if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
-				card_up = 10
-			elsif session[:dealer_showing][1] == 'Ace'
-				card_up = 11
-			else
-				card_up = session[:dealer_showing][1]
-			end
+    def calculate_only_visible
+      if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
+        card_up = 10
+      elsif session[:dealer_showing][1] == 'Ace'
+        card_up = 11
+      else
+        card_up = session[:dealer_showing][1]
+      end
 
-			if session[:calc_dealer_total]
-				total = calculate_total(session[:dealer_cards])
-			end
-			if !session[:calc_dealer_total]
-				total = card_up
-			end
-			total
-		end
+      if session[:calc_dealer_total]
+        total = calculate_total(session[:dealer_cards])
+      end
+      if !session[:calc_dealer_total]
+        total = card_up
+      end
+      total
+    end
 
 end
 
@@ -88,10 +88,10 @@ get '/get_user' do
 end
 
 post '/get_user' do
-	if params[:username].empty?
-		@error = "Name is required"
-		halt erb(:get_user)
-	end
+  if params[:username].empty?
+    @error = "Name is required"
+    halt erb(:get_user)
+  end
   session[:username] = params[:username]
   redirect '/'
 end
@@ -101,9 +101,11 @@ post '/player_hit' do
   session[:turn] = 'player'
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
-	if calculate_total(session[:player_cards]) > 21
-		@error = "Sorry, it looks like #{session[:username]} busted."
-	end
+  if calculate_total(session[:player_cards]) > 21
+    @error = "Sorry, it looks like #{session[:username]} busted."
+  elsif calculate_total(session[:player_cards]) == 21
+    @success = "#{session[:username]} hit Blackjack and wins!"
+  end
   erb :game
 end
 
@@ -117,9 +119,11 @@ end
 post '/dealer_hit' do
 #	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
-	if calculate_total(session[:dealer_cards]) > 21
-		@error = "Sorry, it looks like the dealer busted."
-	end
+  if calculate_total(session[:dealer_cards]) > 21
+    @error = "Sorry, it looks like the dealer busted."
+  elsif calculate_total(session[:dealer_cards]) == 21
+    @success = "Dealer hit Blackjack and wins!"
+  end
   erb :game
 end
 
