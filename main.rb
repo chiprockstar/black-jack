@@ -33,35 +33,50 @@ helpers do
 
     if card[0] == 'H'
       return image_path + "hearts_" + card[1] + ".jpg"
-
     elsif card[0] == 'D'
       return image_path + "diamonds_" + card[1] + ".jpg"
     elsif card[0] == 'C'
       return image_path + "clubs_" + card[1] + ".jpg"
     elsif card[0] == 'S'
       return image_path + "spades_" + card[1] + ".jpg"
-    else
-
     end
   end
 
-    def calculate_only_visible
-      if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
-        card_up = 10
-      elsif session[:dealer_showing][1] == 'Ace'
-        card_up = 11
-      else
-        card_up = session[:dealer_showing][1]
-      end
-
-      if session[:calc_dealer_total]
-        total = calculate_total(session[:dealer_cards])
-      end
-      if !session[:calc_dealer_total]
-        total = card_up
-      end
-      total
+  def calculate_only_visible
+    if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
+      card_up = 10
+    elsif session[:dealer_showing][1] == 'Ace'
+      card_up = 11
+    else
+      card_up = session[:dealer_showing][1]
     end
+
+    if session[:calc_dealer_total]
+      total = calculate_total(session[:dealer_cards])
+    end
+    if !session[:calc_dealer_total]
+      total = card_up
+    end
+    total
+  end
+
+
+
+  def calculate_game_status
+    if calculate_total(session[:dealer_cards]) > 21
+      @error = "Sorry, it looks like the dealer busted."
+    elsif calculate_total(session[:dealer_cards]) == 21
+      @success = "Dealer hit Blackjack and wins!"
+    elsif calculate_total(session[:dealer_cards]) >= 17 && calculate_total(session[:dealer_cards]) <= 20
+      if calculate_total(session[:player_cards]) > calculate_total(session[:dealer_cards])
+        @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and #{session[:username]} wins!"
+      elsif calculate_total(session[:player_cards]) == calculate_total(session[:dealer_cards])
+        @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and it's a tie!"
+      elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards])
+        @success = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}"
+      end
+    end
+  end
 
 end
 
@@ -112,18 +127,14 @@ end
 post '/player_stay' do
   session[:turn] = 'dealer'
   session[:calc_dealer_total] = true
+  calculate_game_status
   erb :game
-
 end
 
 post '/dealer_hit' do
 #	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
-  if calculate_total(session[:dealer_cards]) > 21
-    @error = "Sorry, it looks like the dealer busted."
-  elsif calculate_total(session[:dealer_cards]) == 21
-    @success = "Dealer hit Blackjack and wins!"
-  end
+    calculate_game_status
   erb :game
 end
 
@@ -140,6 +151,9 @@ get '/game' do
   session[:dealer_cards] << session[:dealer_showing]
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
+  if calculate_total(session[:player_cards]) == 21
+    @success = "#{session[:username]} hit Blackjack and wins!"
+  end
   erb :game
 
 end
