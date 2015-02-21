@@ -107,6 +107,11 @@ post '/get_user' do
     @error = "Your name is required"
     halt erb(:get_user)
   end
+
+  if params[:username].count(/[ a-zA-Z]/.to_s) != params[:username].length
+    @error = "Only letters are allowed"
+    halt erb(:get_user)
+  end
   session[:username] = params[:username]
   redirect '/'
 end
