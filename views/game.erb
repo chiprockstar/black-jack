@@ -31,7 +31,7 @@
 <% if session[:turn] == 'dealer' %>
   <p>
     <form action="/dealer_hit" method="post">
-      <input type="submit" value="Dealer Hit" class="btn btn-success">
+      <input type="submit" value='Click to hit' class="btn btn-primary">
     </form>
   </p>
 <% end %>
@@ -39,8 +39,6 @@
 
 <div class="well">
 <h4>Player's cards:</h4>
-
-What would you like to do?
 
 <p>
   <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing.
@@ -58,7 +56,10 @@ What would you like to do?
 </ul>
 </div>
 
+
+
 <% if session[:turn] == 'player' %>
+<p>What would you like to do?</p>
   <ul class="thumbnails">
     <li class="span2">
       <form action="/player_hit" method="post">

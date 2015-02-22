@@ -64,21 +64,28 @@ helpers do
 
   def calculate_game_status
     if calculate_total(session[:dealer_cards]) > 21
-      @error = "Sorry, it looks like the dealer busted. " + session[:username] + " wins!"
+      @success = "It looks like the dealer busted. " + session[:username] + " wins!"
     elsif calculate_total(session[:dealer_cards]) == 21
-      @success = "Dealer hit Blackjack and wins!"
+      session[:card_visibility] = true
+      @error = "Dealer hit Blackjack and wins!"
     elsif calculate_total(session[:dealer_cards]) >= 17 && calculate_total(session[:dealer_cards]) <= 20
       if calculate_total(session[:player_cards]) > calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and #{session[:username]} wins!"
       elsif calculate_total(session[:player_cards]) == calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and it's a tie!"
       elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
-        @success = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
+        @error = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
       end
-    elsif
+
+    elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
+        @error = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
+    else
 
       if calculate_total(session[:player_cards]) > 21
         @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
+        session[:card_visibility] = true
+        session[:turn] = 'dealer'
+        session[:calc_dealer_total] = true
       elsif calculate_total(session[:player_cards]) == 21
         @success = "#{session[:username]} hit Blackjack and wins!"
       end
@@ -144,6 +151,7 @@ post '/player_stay' do
   session[:turn] = 'dealer'
   session[:calc_dealer_total] = true
   calculate_game_status
+#  @success = session[:username] + " has chosen to stay."
   erb :game
 end
 
