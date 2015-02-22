@@ -42,6 +42,7 @@ helpers do
     end
   end
 
+
   def calculate_only_visible
     if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
       card_up = 10
@@ -59,7 +60,6 @@ helpers do
     end
     total
   end
-
 
 
   def calculate_game_status
