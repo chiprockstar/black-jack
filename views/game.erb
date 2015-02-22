@@ -3,72 +3,71 @@
 
 <p>Welcome <%= session[:username] %>.</p>
 <div class="well">
-<h4>Dealer's cards:</h4>
+  <h4>Dealer's cards:</h4>
 
-<p>
-  The dealer has <%= calculate_only_visible %> showing.
-</p>
+  <p>
+    The dealer has <%= calculate_only_visible %> showing.
+  </p>
 
 
-<ul class="thumbnails">
+  <ul class="thumbnails">
 
-  <% if session[:turn] == 'player' %>
-    <% visibility = false %>
-  <% else %>
-    <% visibility = true %>
-  <% end %>
-  <% session[:dealer_cards].each do |card| %>
-  <li class="span2">
-    <div class="thumbnail">
-      <img  src= <%= show_hand(card, visibility) %>
+    <% if session[:turn] == 'player' %>
+      <% visibility = false %>
+    <% else %>
       <% visibility = true %>
-    </div>
-  </li>
-  <% end %>
-</ul>
+    <% end %>
+    <% session[:dealer_cards].each do |card| %>
+    <li class="span2">
+      <div class="thumbnail">
+        <img  src= <%= show_hand(card, visibility) %>
+        <% visibility = true %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
 </div>
 
 <% if session[:turn] == 'dealer' %>
   <p>
     <form action="/dealer_hit" method="post">
-      <input type="submit" value='Click to hit' class="btn btn-primary">
+      <input type="submit" value='Hit' class="btn btn-primary">
     </form>
   </p>
 <% end %>
 <br/>
 
 <div class="well">
-<h4>Player's cards:</h4>
+  <h4>Player's cards:</h4>
 
-<p>
-  <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing.
-</p>
+  <p>
+    <%= session[:username] %> has <%= calculate_total(session[:player_cards]) %> showing.
+  </p>
 
 
-<ul class="thumbnails">
+  <ul class="thumbnails">
     <% session[:player_cards].each do |card| %>
-    <li class="span2">
-      <div class="thumbnail">
-        <img  src= <%= show_hand(card, true) %>
-      </div>
-    </li>
+      <li class="span2">
+        <div class="thumbnail">
+          <img  src= "<%= show_hand(card, true) %>">
+        </div>
+      </li>
     <% end %>
-</ul>
+  </ul>
 </div>
-
 
 
 <% if session[:turn] == 'player' %>
 <p>What would you like to do?</p>
   <ul class="thumbnails">
-    <li class="span2">
+    <li>
       <form action="/player_hit" method="post">
-        <input type="submit" value="Player Hit" class="btn btn-success">
+        <input type="submit" value="Hit" class="btn btn-success">
       </form>
     </li>
-    <li class="span2">
+    <li>
       <form action="/player_stay" method="post">
-        <input type="submit" value="Player Stay" class="btn btn-warning">
+        <input type="submit" value="Stay" class="btn btn-warning">
       </form>
     </li>
   </ul>

@@ -23,11 +23,11 @@ helpers do
     total
   end
 
-  # images/cards/clubs_10.jpg
+
   def show_hand(card, visibility)
     image_path = 'images/cards/'
 
-    if visibility == false
+    if !visibility
        return image_path + "cover.jpg"
     end
 
@@ -65,46 +65,49 @@ helpers do
   def calculate_game_status
     if calculate_total(session[:dealer_cards]) > 21
       @success = "It looks like the dealer busted. " + session[:username] + " wins!"
-    elsif calculate_total(session[:dealer_cards]) == 21
+      session[:turn] = 'game_over'
+
+    elsif calculate_total(session[:player_cards]) > 21
+      @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
       session[:card_visibility] = true
+      session[:turn] = 'game_over'
+      session[:calc_dealer_total] = true
+
+    elsif calculate_total(session[:player_cards]) == 21
+      @success = "#{session[:username]} hit Blackjack and wins!"
+      session[:card_visibility] = true
+      session[:turn] = 'game_over'
+      session[:calc_dealer_total] = true
+
+    elsif calculate_total(session[:dealer_cards]) == 21
       @error = "Dealer hit Blackjack and wins!"
+      session[:card_visibility] = true
+      session[:turn] = 'game_over'
+      session[:calc_dealer_total] = true
+
     elsif calculate_total(session[:dealer_cards]) >= 17 && calculate_total(session[:dealer_cards]) <= 20
+
       if calculate_total(session[:player_cards]) > calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and #{session[:username]} wins!"
+        session[:turn] = 'game_over'
       elsif calculate_total(session[:player_cards]) == calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and it's a tie!"
+        session[:turn] = 'game_over'
       elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @error = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
+        session[:turn] = 'game_over'
       end
 
     elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @error = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
-    else
-
-      if calculate_total(session[:player_cards]) > 21
-        @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
-        session[:card_visibility] = true
-        session[:turn] = 'dealer'
-        session[:calc_dealer_total] = true
-      elsif calculate_total(session[:player_cards]) == 21
-        @success = "#{session[:username]} hit Blackjack and wins!"
-      end
-
-
-
+        session[:turn] = 'game_over'
     end
+
   end
 
 end
 
-
-
-
-
-
-
-
-
+#routes
 
 get '/' do
   session[:turn] = 'player'
@@ -134,15 +137,9 @@ post '/get_user' do
 end
 
 post '/player_hit' do
-  #erb :player_hit
   session[:turn] = 'player'
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
-  # if calculate_total(session[:player_cards]) > 21
-  #   @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
-  # elsif calculate_total(session[:player_cards]) == 21
-  #   @success = "#{session[:username]} hit Blackjack and wins!"
-  # end
   calculate_game_status
   erb :game
 end
@@ -151,12 +148,10 @@ post '/player_stay' do
   session[:turn] = 'dealer'
   session[:calc_dealer_total] = true
   calculate_game_status
-#  @success = session[:username] + " has chosen to stay."
   erb :game
 end
 
 post '/dealer_hit' do
-#	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
   calculate_game_status
   erb :game
@@ -175,9 +170,6 @@ get '/game' do
   session[:dealer_cards] << session[:dealer_showing]
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
-  # if calculate_total(session[:player_cards]) == 21
-  #   @success = "#{session[:username]} hit Blackjack and wins!"
-  # end
   calculate_game_status
   erb :game
 
