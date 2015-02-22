@@ -64,17 +64,27 @@ helpers do
 
   def calculate_game_status
     if calculate_total(session[:dealer_cards]) > 21
-      @error = "Sorry, it looks like the dealer busted."
+      @error = "Sorry, it looks like the dealer busted. " + session[:username] + " wins!"
     elsif calculate_total(session[:dealer_cards]) == 21
       @success = "Dealer hit Blackjack and wins!"
     elsif calculate_total(session[:dealer_cards]) >= 17 && calculate_total(session[:dealer_cards]) <= 20
-      if calculate_total(session[:player_cards]) > calculate_total(session[:dealer_cards])
+      if calculate_total(session[:player_cards]) > calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and #{session[:username]} wins!"
-      elsif calculate_total(session[:player_cards]) == calculate_total(session[:dealer_cards])
+      elsif calculate_total(session[:player_cards]) == calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
         @success = "Dealer stays at #{calculate_total(session[:dealer_cards])} and it's a tie!"
-      elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards])
-        @success = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}"
+      elsif calculate_total(session[:player_cards]) < calculate_total(session[:dealer_cards]) && session[:turn] == 'dealer'
+        @success = "Dealer stays and wins at #{calculate_total(session[:dealer_cards])}."
       end
+    elsif
+
+      if calculate_total(session[:player_cards]) > 21
+        @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
+      elsif calculate_total(session[:player_cards]) == 21
+        @success = "#{session[:username]} hit Blackjack and wins!"
+      end
+
+
+
     end
   end
 
@@ -109,7 +119,7 @@ post '/get_user' do
   end
 
   if params[:username].count(/[ a-zA-Z]/.to_s) != params[:username].length
-    @error = "Only letters are allowed"
+    @error = "Only letters are allowed."
     halt erb(:get_user)
   end
   session[:username] = params[:username]
@@ -121,11 +131,12 @@ post '/player_hit' do
   session[:turn] = 'player'
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
-  if calculate_total(session[:player_cards]) > 21
-    @error = "Sorry, it looks like #{session[:username]} busted."
-  elsif calculate_total(session[:player_cards]) == 21
-    @success = "#{session[:username]} hit Blackjack and wins!"
-  end
+  # if calculate_total(session[:player_cards]) > 21
+  #   @error = "Sorry, it looks like #{session[:username]} busted. The dealer wins!"
+  # elsif calculate_total(session[:player_cards]) == 21
+  #   @success = "#{session[:username]} hit Blackjack and wins!"
+  # end
+  calculate_game_status
   erb :game
 end
 
@@ -139,7 +150,7 @@ end
 post '/dealer_hit' do
 #	session[:turn] = 'dealer'
   session[:dealer_cards] << session[:deck].pop
-    calculate_game_status
+  calculate_game_status
   erb :game
 end
 
@@ -156,9 +167,10 @@ get '/game' do
   session[:dealer_cards] << session[:dealer_showing]
   session[:player_cards] << session[:deck].pop
   session[:calc_dealer_total] = false
-  if calculate_total(session[:player_cards]) == 21
-    @success = "#{session[:username]} hit Blackjack and wins!"
-  end
+  # if calculate_total(session[:player_cards]) == 21
+  #   @success = "#{session[:username]} hit Blackjack and wins!"
+  # end
+  calculate_game_status
   erb :game
 
 end
