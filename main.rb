@@ -32,13 +32,13 @@ helpers do
     end
 
     if card[0] == 'H'
-      return image_path + "hearts_" + card[1] + ".jpg"
+      return image_path + "hearts_" + card[1].downcase + ".jpg"
     elsif card[0] == 'D'
-      return image_path + "diamonds_" + card[1] + ".jpg"
+      return image_path + "diamonds_" + card[1].downcase + ".jpg"
     elsif card[0] == 'C'
-      return image_path + "clubs_" + card[1] + ".jpg"
+      return image_path + "clubs_" + card[1].downcase + ".jpg"
     elsif card[0] == 'S'
-      return image_path + "spades_" + card[1] + ".jpg"
+      return image_path + "spades_" + card[1].downcase + ".jpg"
     end
   end
 
