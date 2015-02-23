@@ -2,6 +2,18 @@
 <h1>Blackjack!</h1>
 
 <p>Welcome <%= session[:username] %>.</p>
+
+<% if @play_again %>
+  <p>
+    <strong>Play again?</strong>
+    <a href="/game" class="btn btn-primary">Yes</a>
+    <a href="/game_over" class="btn">No</a>
+  </p>
+<% end %>
+
+
+
+
 <div class="well">
   <h4>Dealer's cards:</h4>
 
@@ -31,7 +43,7 @@
 <% if session[:turn] == 'dealer' %>
   <p>
     <form action="/dealer_hit" method="post">
-      <input type="submit" value='Hit' class="btn btn-primary">
+      <input type="submit" value='Click to see dealer card &rarr;' class="btn btn-primary">
     </form>
   </p>
 <% end %>
