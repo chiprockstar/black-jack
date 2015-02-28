@@ -44,7 +44,8 @@ helpers do
 
 
   def calculate_only_visible
-    if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] == 'Queen' || session[:dealer_showing][1] == 'King'
+    if session[:dealer_showing][1] == 'Jack' || session[:dealer_showing][1] ==
+      'Queen' || session[:dealer_showing][1] == 'King'
       card_up = 10
     elsif session[:dealer_showing][1] == 'Ace'
       card_up = 11
@@ -85,28 +86,39 @@ helpers do
     player_turn = session[:turn]
 
     if dealer_cards > 21
-      display_results('win', "It looks like the dealer busted. <strong>#{session[:username]} wins!</strong>")
+      display_results('win', "It looks like the dealer busted.
+                    <strong>#{session[:username]} wins!</strong>")
     elsif player_cards > 21
-      display_results('loss', "Sorry, it looks like <strong>#{session[:username]} busted. The dealer wins!</strong>")
+      display_results('loss', "Sorry, it looks like
+                    <strong>#{session[:username]} busted. The dealer
+                     wins!</strong>")
     elsif dealer_cards == 21 && player_cards == 21
-      display_results('loss', "Both dealer and <strong>#{session[:username]}</strong> hit Blackjack so the dealer wins!")
+      display_results('loss', "Both dealer and
+                    <strong>#{session[:username]}</strong> hit Blackjack so the
+                     dealer wins!")
     elsif player_cards == 21
-      display_results('win', "<strong>#{session[:username]}</strong> hit Blackjack and wins!")
+      display_results('win', "<strong>#{session[:username]}</strong> hit
+                    Blackjack and wins!")
     elsif dealer_cards == 21
-      display_results('loss', "Dealer hit Blackjack and <strong>#{session[:username]}</strong> loses.")
+      display_results('loss', "Dealer hit Blackjack and
+                    <strong>#{session[:username]}</strong> loses.")
 
     elsif dealer_cards >= 17 #&& calculate_total(session[:dealer_cards]) <= 20
 
       if player_cards > dealer_cards && player_turn == 'dealer'
-        display_results('win', "Dealer stays at #{dealer_cards} and <strong>#{session[:username]} wins!</strong>")
+          display_results('win', "Dealer stays at #{dealer_cards} and
+                        <strong>#{session[:username]} wins!</strong>")
       elsif player_cards == dealer_cards && player_turn == 'dealer'
-        display_results('tie', "Dealer stays at #{dealer_cards} and it's a tie!")
+        display_results('tie', "Dealer stays at #{dealer_cards} and it's a
+                      tie!")
       elsif player_cards < dealer_cards && player_turn == 'dealer'
-        display_results('loss', "Dealer stays and wins at #{dealer_cards}. <strong>#{session[:username]}</strong> loses.")
+        display_results('loss', "Dealer stays and wins at #{dealer_cards}.
+                      <strong>#{session[:username]}</strong> loses.")
       end
 
     elsif player_cards < dealer_cards && player_turn == 'dealer'
-      display_results('loss', "Dealer stays and wins at #{dealer_cards}. <strong>#{session[:username]}</strong> loses.")
+      display_results('loss', "Dealer stays and wins at #{dealer_cards}.
+                    <strong>#{session[:username]}</strong> loses.")
     end
 
   end
