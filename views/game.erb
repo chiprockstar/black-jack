@@ -1,4 +1,4 @@
-
+<div id="game">
 <h1>Blackjack!</h1>
 
 <p>Welcome <%= session[:username] %>.</p>
@@ -40,7 +40,7 @@
 
 <% if session[:turn] == 'dealer' %>
   <p>
-    <form action="/dealer_hit" method="post">
+    <form id="dealer_form" action="/dealer_hit" method="post">
       <input type="submit" value='Click to see dealer card &rarr;' class="btn btn-primary">
     </form>
   </p>
@@ -73,14 +73,15 @@
 <p>What would you like to do? </p>
   <ul class="thumbnails">
     <li>
-      <form action="/player_hit" method="post">
+      <form id="hit_form" action="/player_hit" method="post">
         <input type="submit" value="Hit" class="btn btn-success">
       </form>
     </li>
     <li>
-      <form action="/player_stay" method="post">
+      <form id="stay_form" action="/player_stay" method="post">
         <input type="submit" value="Stay" class="btn btn-warning">
       </form>
     </li>
   </ul>
 <% end %>
+</div>
