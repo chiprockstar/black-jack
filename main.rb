@@ -4,6 +4,7 @@ require 'sinatra'
 set :sessions, true
 
 helpers do
+
   def calculate_total(cards)
     arr = cards.map{ |element| element[1] }
 
@@ -65,11 +66,13 @@ helpers do
 
   def display_results(result, msg)
     if result == 'loss'
-      @error = msg
+      session[:player_purse] -= session[:player_bet].to_i
+      @error = msg + " #{session[:username]} has $#{session[:player_purse]}."
     elsif result == 'win'
-      @success = msg
+      session[:player_purse] += session[:player_bet].to_i
+      @success = msg + " #{session[:username]} has $#{session[:player_purse]}."
     elsif result == 'tie'
-      @success = msg
+      @success = msg + " #{session[:username]} has $#{session[:player_purse]}."
     end
     session[:card_visibility] = true
     session[:turn] = 'game_over'
@@ -151,6 +154,38 @@ post '/get_user' do
     halt erb(:get_user)
   end
   session[:username] = params[:username]
+  session[:player_purse] = 500
+  redirect '/bet'
+end
+
+get '/bet' do
+  if session[:player_purse].to_i == 0
+    redirect '/game_over'
+  end
+  erb :bet
+end
+
+post '/bet' do
+  # if session[:player_purse].to_i == 0
+  #   @error = "Sorry, you are out of money. Click 'Start New Game'."
+  #   halt erb(:bet)
+  # end
+  if params[:bet].empty?
+    @error = "Please place a bet."
+    halt erb(:bet)
+  end
+  if params[:bet].to_i > session[:player_purse].to_i
+    @error = "Please place a bet less than or equal to
+    $#{session[:player_purse]}"
+    halt erb(:bet)
+  end
+  if params[:bet].to_i <= 0
+    @error = "Please place a bet greater than $0."
+    halt erb(:bet)
+  end
+
+
+  session[:player_bet] = params[:bet]
   redirect '/'
 end
 

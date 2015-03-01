@@ -1,0 +1,12 @@
+
+<% if session[:player_purse].to_i > 0 %>
+  <h4>Make a bet for this round.</h4>
+  <p>You have $<%= session[:player_purse] %></p>
+
+  <form action="/bet" method="post" class="form-inline">
+
+    <input type="text" name="bet" class="input-medium" placeholder="Your bet"/>
+    <button type="submit" class="btn btn-primary">Let's Play</button>
+
+  </form>
+<% end %>
