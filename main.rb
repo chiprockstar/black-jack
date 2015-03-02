@@ -85,17 +85,47 @@ helpers do
     reset_game
   end
 
-  def win
 
+  def twenty_one(player)
+    if player == 'both'
+      display_results('loss', "Both dealer and
+                    <strong>#{session[:username]}</strong> hit Blackjack so the
+                     dealer wins!")
+    elsif player == 'player'
+      display_results('win', "<strong>#{session[:username]}</strong> hit
+                    Blackjack and wins!")
+    elsif player == 'dealer'
+      display_results('loss', "Dealer hit Blackjack and
+                    <strong>#{session[:username]}</strong> loses.")
+    end
   end
 
-  def lose
 
+  def busted(player)
+    if player == 'dealer'
+      display_results('win', "It looks like the dealer busted.
+                    <strong>#{session[:username]} wins!</strong>")
+    else
+      display_results('loss', "Sorry, it looks like
+                    <strong>#{session[:username]} busted. The dealer
+                     wins!</strong>")
+    end
   end
 
-  def tie
 
+  def dealer_stay(dealer_cards, player_cards)
+    if player_cards > dealer_cards
+      display_results('win', "Dealer stays at #{dealer_cards} and
+                    <strong>#{session[:username]} wins!</strong>")
+    elsif player_cards == dealer_cards
+      display_results('tie', "Dealer stays at #{dealer_cards} and it's a
+                    tie!")
+    elsif player_cards < dealer_cards
+      display_results('loss', "Dealer stays and wins at #{dealer_cards}.
+                    <strong>#{session[:username]}</strong> loses.")
+    end
   end
+
 
   def calculate_game_status
     dealer_cards = calculate_total(session[:dealer_cards])
@@ -104,36 +134,17 @@ helpers do
 
     case
     when dealer_cards > 21
-      display_results('win', "It looks like the dealer busted.
-                    <strong>#{session[:username]} wins!</strong>")
+      busted('dealer')
     when player_cards > 21
-      display_results('loss', "Sorry, it looks like
-                    <strong>#{session[:username]} busted. The dealer
-                     wins!</strong>")
+      busted('player')
     when dealer_cards == 21 && player_cards == 21
-      display_results('loss', "Both dealer and
-                    <strong>#{session[:username]}</strong> hit Blackjack so the
-                     dealer wins!")
+      twenty_one('both')
     when player_cards == 21
-      display_results('win', "<strong>#{session[:username]}</strong> hit
-                    Blackjack and wins!")
+      twenty_one('player')
     when dealer_cards == 21
-      display_results('loss', "Dealer hit Blackjack and
-                    <strong>#{session[:username]}</strong> loses.")
-    when dealer_cards >= 17
-      if player_cards > dealer_cards && player_turn == 'dealer'
-          display_results('win', "Dealer stays at #{dealer_cards} and
-                        <strong>#{session[:username]} wins!</strong>")
-      elsif player_cards == dealer_cards && player_turn == 'dealer'
-        display_results('tie', "Dealer stays at #{dealer_cards} and it's a
-                      tie!")
-      elsif player_cards < dealer_cards && player_turn == 'dealer'
-        display_results('loss', "Dealer stays and wins at #{dealer_cards}.
-                      <strong>#{session[:username]}</strong> loses.")
-      end
-    when player_cards < dealer_cards && player_turn == 'dealer'
-      display_results('loss', "Dealer stays and wins at #{dealer_cards}.
-                    <strong>#{session[:username]}</strong> loses.")
+      tewnty_one('dealer')
+    when dealer_cards >= 17 && player_turn == 'dealer'
+      dealer_stay(dealer_cards, player_cards)
     end
   end
 end
